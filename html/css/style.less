@@ -1,0 +1,173 @@
+@import 'reset.less';
+@import 'grid.less';
+
+
+// Specify the number of columns and set column and gutter widths
+@columns: 12;
+@column-width: 60;
+@gutter-width: 20;
+
+// Remove the definition below for a pixel-based layout
+@total-width: 100%;
+@bgcolor:  #c0c0c0;
+
+
+body{
+    background: @bgcolor;
+    font-family: 'Inconsolata', courier, monospace;
+    margin: 25px 0 0 0;
+}
+
+button{
+        display: inline-block;
+        border: 1px solid #FFF;
+        background: #999;
+        &.active{
+            background: yellow;
+        }
+}
+
+
+
+
+#msg{
+    font-size: 15px;
+    line-height: 15px;
+    padding:5px;
+    position: absolute;
+    top: 0;
+    left:0;
+    right:0;
+    height: 15px;
+    background: #000;
+    color: aqua;
+}
+
+.row{
+    padding: 10px 25px;
+}
+
+input{
+
+    border: none;
+    border-radius: 5px;
+
+    &.bpm{
+
+    }
+}
+
+
+.channel{
+
+    .sample, .steps{
+        display: inline-block;
+            font-size: 12px !important;
+        }
+    .option-wav{
+
+    }
+
+    .steps button{
+        width: 32px;
+        height: 32px;
+        margin: 5px;
+
+        &.active{
+            background: yellow;
+        }
+
+        &.play{
+            border: 1px solid #900;
+        }
+    }
+
+
+}
+
+/* SEQ */
+
+.timeline{
+    margin: 25px;
+    width:  512px;
+    height: 256px;
+    position: relative;
+    background: #F8F8D8;
+    float: left;
+
+    .playhead{
+        width:2px;
+        height:256px;
+        position: absolute;
+        background: #000;
+    }
+
+    .pad{
+      background: #FFF;
+      width:14px;
+      height: 14px;
+        border: 1px solid #FFF;
+    }
+}
+
+
+.channels{
+    margin: 25px 0;
+    float: left;
+    width:256px;
+    height: 256px;
+    background: #FFF;
+
+    .ch{
+        width:256px;
+        height: 15px;
+        border-bottom: 1px dotted #C0C0C0;
+
+    }
+
+}
+
+.ch-steps{
+    .pad{
+        float: left;
+    }
+
+    li{
+        background: #F8F8D8;
+    }
+
+    li.active{
+        background: #900;
+    }
+
+}
+
+
+.ch-strip{
+    position: relative;
+    margin: 25px 0 25px 25px;
+    float: left;
+    width:256px;
+    height: 256px;
+    background: #FFF;
+
+    .vol-num{
+        position: absolute;
+        right:12px;
+        top:0px;
+        height: 24px;
+        width:24px;
+        background: #FFF;
+        text-align: center;
+    }
+
+    .vol{
+        position: absolute;
+        right:16px;
+        top:40px;
+        height: 200px;
+    }
+
+}
+
+
