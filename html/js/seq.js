@@ -59,7 +59,7 @@ function addFX(){
             <div class="label">'+fx+'</div>\
         </div>';
 
-        $(slider).appendTo('.ch-strip');
+        $(slider).appendTo('.ch-ctrl');
 
 
 
@@ -70,7 +70,7 @@ function addFX(){
           max: 100,
           slide: function( event, ui ) {
             $( '.channels .ch.active .'+fx+'-num').text( ui.value );
-            $( '.ch-strip .'+fx+' .num' ).text( ui.value );
+            $( '.ch-ctrl .'+fx+' .num' ).text( ui.value );
           }
         });
 
@@ -83,16 +83,13 @@ function addFX(){
  */
 function chControl(){
 
+    seqControl();
 
-
-    $( ".ch-strip .bool" ).button().hide();
-
-    $( "#seq" ).buttonset();
-    $( "#dnup" ).buttonset();
+    $( ".ch-ctrl .bool" ).button().hide();
 
     $( "#seq label" ).click(function() {
         var steps = parseInt( $( this ).text() );
-        var idx = $('.ch-strip').data('channel');
+        var idx = $('.ch-ctrl').data('channel');
         $('#steps'+idx+' .pad').removeClass('active');
         $.each( $('#steps'+idx+' .pad'), function(i,e){
 
@@ -104,12 +101,12 @@ function chControl(){
 
         });
 
-      });
+    });
 
     $( "#dnup label" ).click(function() {
 
         var stepDir= $( this ).text();
-        var idx = $('.ch-strip').data('channel');
+        var idx = $('.ch-ctrl').data('channel');
 
         var pattern = [];
         var next = false;
@@ -144,7 +141,7 @@ function chControl(){
 
     /*
     $('#check-rnd').click(function(){
-        var idx = $('.ch-strip').data('channel');
+        var idx = $('.ch-ctrl').data('channel');
         $('#steps'+idx+' .pad').removeClass('active');
 
         var steps  = [1,2,3,4,5,6];
@@ -164,17 +161,15 @@ function chControl(){
     })*/
 
 
-
-
     /* Vol */
-    $( ".ch-strip .vol .ctrl" ).slider({
+    $( ".ch-ctrl .vol .ctrl" ).slider({
       orientation: "vertical",
       range: "min",
       min: 0,
       max: 100,
       slide: function( event, ui ) {
         $( ".channels .ch.active .vol-num").text( ui.value );
-        $( ".ch-strip .vol .num" ).text( ui.value );
+        $( ".ch-ctrl .vol .num" ).text( ui.value );
       }
     });
 
@@ -196,7 +191,7 @@ function buildFx(){
             <div class="num">--</div>\
             <div class="label">'+fx.toUpperCase()+'</div>\
         ';
-        $(slider).html(ctrl).appendTo('.ch-strip');
+        $(slider).html(ctrl).appendTo('.ch-ctrl');
 
         $( '.ctrl', slider ).slider({
           orientation: "vertical",
@@ -205,24 +200,41 @@ function buildFx(){
           max: 100,
           slide: function( event, ui ) {
             $( '.channels .ch.active .'+fx+'-num').text( ui.value );
-            $( '.ch-strip .'+fx+' .num' ).text( ui.value );
+            $( '.ch-ctrl .'+fx+' .num' ).text( ui.value );
           }
         });
 
         slider.css({left:50+(25* i) })
 
-        //$('.ch-strip .slider.'+fx+'  .num').text(0);
-       // $('.ch-strip .slider.'+fx+'  .ctrl').slider('value', 0);
-
-
+        // $('.ch-ctrl .slider.'+fx+'  .num').text(0);
+        // $('.ch-ctrl .slider.'+fx+'  .ctrl').slider('value', 0);
     });
 
+    // bind chSelect() - click on ch row
     chSelect();
 
+}
 
 
+/**
+ *  seq control ( makes active hits on grid increment by 0-9)
+ */
+function seqControl(){
+
+    var seq = $('<div/>').attr('id', 'seq');
+    for(i=1;1<9;i++){
+        $('<input type="radio" id="radio'+i+'" name="radio"><label for="radio'+i+'">'+i+'</label>').appendTo(seq);
+    }
+    $( seq ).buttonset().appendTo('.ch-ctrl');
+
+
+    var dnup = $('<div/>').attr('id', 'dnup').addClass('btn-row');
+    $('<input type="radio" id="seqDown" name="radio"><label for="seqDown">-</label>').appendTo(dnup);
+    $('<input type="radio" id="seqUp" name="radio"><label for="seqUp">+</label>').appendTo(dnup);
+    $( dnup ).buttonset().appendTo('.ch-ctrl');
 
 }
+
 
 /**
  *  ADDCH
@@ -239,45 +251,39 @@ function addChannel(idx){
 
     $('<div class="sel">sel</div>').appendTo(div); // volume #
 
+    // triggers chSelect()
     div.appendTo('.channels').trigger('click');
 
-
 }
+
 /**
  *  ADDCH SELECT
  */
 function chSelect(){
 
-
-
-
-
     $(document).on('click', '.channels .ch', function(){
         var ch = $(this).data('channel');
 
-        $('.ch-strip').data('channel', ch);
-        $('.ch-strip .current').text(ch);
-
+        // set active
+        $('.ch-ctrl').data('channel', ch);
+        $('.ch-ctrl .current').text(ch);
         $('.channels .ch').removeClass('active');
         $(this).addClass('active');
 
         // get all num values
         var chVal = getChValues(ch);
 
-            // !!!YES
+        // set all num values
+        $('.ch-ctrl .slider.vol .num').text(chVal.vol);
+        $('.ch-ctrl .slider.vol .ctrl').slider('value', chVal.vol);
+        // set all fx num values
         $.each(fx, function(i, fx){
-
-            // set all num values
-            $('.ch-strip .slider.'+fx+' .num').text(chVal[fx]);
-            $('.ch-strip .slider.'+fx+' .ctrl').slider('value', chVal[fx]);
-
+            $('.ch-ctrl .slider.'+fx+' .num').text(chVal[fx]);
+            $('.ch-ctrl .slider.'+fx+' .ctrl').slider('value', chVal[fx]);
         });
 
 
-        // set all num values
-        $('.ch-strip .slider.vol .num').text(chVal.vol);
-        $('.ch-strip .slider.vol .ctrl').slider('value', chVal.vol);
-
+        // pick sample from select with same index as ch
         $('.option-wav option:eq('+chVal.wav+')').prop('selected', true);
         //console.log( $('.option-wav option:eq('+wav+')') );
     });
@@ -515,18 +521,25 @@ function addRow(){
 }
 
 
+
+/**
+ *  Generic message trigger
+ */
 function msg(msg){
     $('#msg').text(msg);
 }
 
+/**
+ *  Draggable grid
+ */
 function draggable(target){
     target.draggable({ axis: "x", grid: [ grid, grid ] });
 }
 
 
-
-
-
+/**
+ *  Array rotate
+ */
 Array.prototype.rotate = (function() {
     // save references to array functions to make lookup faster
     var push = Array.prototype.push,
