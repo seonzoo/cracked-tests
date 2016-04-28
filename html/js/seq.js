@@ -7,8 +7,8 @@ $(document).ready(function($){
     chControl(); // >>>
 
     getSounds();
-    
-    
+
+
 
 });
 
@@ -38,11 +38,11 @@ function getChValues( ch ){
             'vol' : parseInt( $('.vol-num', thisCH).text() ),
             'wav' : parseInt( $('.wav-num', thisCH).text() )
         };
-    
+
         $.each(fx, function(i, fx){
             vals[fx] = parseInt( $('.'+fx+'-num',  thisCH).text() ) ;
-        });    
-        
+        });
+
     console.log(vals);
 
     return vals;
@@ -52,17 +52,17 @@ function addFX(){
 
 
     $.each(fx, function(i, fx){
-    
+
         var slider = '<div class="slider '+fx+'">\
             <div class="ctrl"></div>\
             <div class="num">--</div>\
             <div class="label">'+fx+'</div>\
         </div>';
-        
-        $(slider).appendTo('.ch-strip');
-        
 
-            
+        $(slider).appendTo('.ch-strip');
+
+
+
         $( '.ctrl', slider ).slider({
           orientation: "vertical",
           range: "min",
@@ -72,115 +72,98 @@ function addFX(){
             $( '.channels .ch.active .'+fx+'-num').text( ui.value );
             $( '.ch-strip .'+fx+' .num' ).text( ui.value );
           }
-        });        
+        });
 
     });
 
 }*/
 
-Array.prototype.rotate = (function() {
-    // save references to array functions to make lookup faster
-    var push = Array.prototype.push,
-        splice = Array.prototype.splice;
-
-    return function(count) {
-        var len = this.length >>> 0, // convert to uint
-            count = count >> 0; // convert to int
-
-        // convert count to value in range [0, len)
-        count = ((count % len) + len) % len;
-
-        // use splice.call() instead of this.splice() to make function generic
-        push.apply(this, splice.call(this, 0, count));
-        return this;
-    };
-})();
 /**
- *  ADDCH 
+ *  ADDCH
  */
 function chControl(){
 
-    
-    
+
+
     $( ".ch-strip .bool" ).button().hide();
-    
+
     $( "#seq" ).buttonset();
     $( "#dnup" ).buttonset();
-        
+
     $( "#seq label" ).click(function() {
         var steps = parseInt( $( this ).text() );
         var idx = $('.ch-strip').data('channel');
         $('#steps'+idx+' .pad').removeClass('active');
         $.each( $('#steps'+idx+' .pad'), function(i,e){
-            
+
                 var hit = (i % steps);
                 //console.log(rndSt +'='+ hit);
                 if( hit == 0 ){
                     $(this).addClass('active');
                 }
-        
-        });	
-        
-      });      
-    
+
+        });
+
+      });
+
     $( "#dnup label" ).click(function() {
-        
+
         var stepDir= $( this ).text();
         var idx = $('.ch-strip').data('channel');
-        
+
         var pattern = [];
         var next = false;
-        
+
             //$('#steps'+idx+' .pad').removeClass('active');
             $.each( $('#steps'+idx+' .pad'), function(i,e){
 
-                    if( $(this).hasClass('active') ){ 
+                    if( $(this).hasClass('active') ){
                         pattern.push(true);
                     } else {
                         pattern.push(false);
                     }
-            });	
-        
-           
+            });
+
+
             if(stepDir == '+'){
                 pattern = pattern.rotate(-1);
             } else {
                 pattern = pattern.rotate(1);
             }
-        
+
             $.each( $('#steps'+idx+' .pad'), function(i,e){
 
-                    if( pattern[i] == true ){ 
+                    if( pattern[i] == true ){
                         $(this).addClass('active')
                     } else {
                         $(this).removeClass('active');
                     }
-            });	
-        
+            });
+
       });
-    
+
     /*
     $('#check-rnd').click(function(){
         var idx = $('.ch-strip').data('channel');
         $('#steps'+idx+' .pad').removeClass('active');
-        
+
         var steps  = [1,2,3,4,5,6];
         var rndSt  = parseInt( steps[~~(Math.random() * steps.length)]);
 
-		//var rnd  = ~~(Math.random() * $('#steps'+idx+' .pad').length);	
+        //var rnd  = ~~(Math.random() * $('#steps'+idx+' .pad').length);
         $.each( $('#steps'+idx+' .pad'), function(i,e){
-            
+
                 var hit = (i % rndSt);
                 //console.log(rndSt +'='+ hit);
                 if( hit ==0 ){
                     $(this).addClass('active');
                 }
-        
-        });		
+
+        });
 
     })*/
-    
-    
+
+
 
 
     /* Vol */
@@ -194,15 +177,19 @@ function chControl(){
         $( ".ch-strip .vol .num" ).text( ui.value );
       }
     });
-    
-    
+
+
     buildFx();
 
 }
+
+/**
+ *  Build FX SLIDERS
+ */
 function buildFx(){
 
     $.each(fx, function(i, fx){
-    
+
         var slider = $('<div/>').addClass('slider').addClass(fx);
         var ctrl = '\
             <div class="ctrl"></div>\
@@ -210,7 +197,7 @@ function buildFx(){
             <div class="label">'+fx.toUpperCase()+'</div>\
         ';
         $(slider).html(ctrl).appendTo('.ch-strip');
-            
+
         $( '.ctrl', slider ).slider({
           orientation: "vertical",
           range: "min",
@@ -220,25 +207,25 @@ function buildFx(){
             $( '.channels .ch.active .'+fx+'-num').text( ui.value );
             $( '.ch-strip .'+fx+' .num' ).text( ui.value );
           }
-        });   
-        
+        });
+
         slider.css({left:50+(25* i) })
-        
+
         //$('.ch-strip .slider.'+fx+'  .num').text(0);
        // $('.ch-strip .slider.'+fx+'  .ctrl').slider('value', 0);
-        
+
 
     });
-    
+
     chSelect();
-    
-    
+
+
 
 
 }
 
 /**
- *  ADDCH 
+ *  ADDCH
  */
 function addChannel(idx){
 
@@ -248,21 +235,22 @@ function addChannel(idx){
 
         $.each(fx, function(i, fx){
             $('<div class="num '+fx+'-num">0</div>').appendTo(div);
-        }); 
-    
+        });
+
+    $('<div class="sel">sel</div>').appendTo(div); // volume #
 
     div.appendTo('.channels').trigger('click');
-    
+
 
 }
 /**
  *  ADDCH SELECT
  */
 function chSelect(){
-    
-    
-    
-    
+
+
+
+
 
     $(document).on('click', '.channels .ch', function(){
         var ch = $(this).data('channel');
@@ -275,7 +263,7 @@ function chSelect(){
 
         // get all num values
         var chVal = getChValues(ch);
-        
+
             // !!!YES
         $.each(fx, function(i, fx){
 
@@ -284,12 +272,12 @@ function chSelect(){
             $('.ch-strip .slider.'+fx+' .ctrl').slider('value', chVal[fx]);
 
         });
-        
+
 
         // set all num values
         $('.ch-strip .slider.vol .num').text(chVal.vol);
         $('.ch-strip .slider.vol .ctrl').slider('value', chVal.vol);
- 
+
         $('.option-wav option:eq('+chVal.wav+')').prop('selected', true);
         //console.log( $('.option-wav option:eq('+wav+')') );
     });
@@ -310,7 +298,7 @@ function doHits(){
             if(hit){
                 var chVA = getChValues(chID);
                 msg( 'Hit CH(' + chID + ') @' + (headX+1) + ' |wav|'+chVA.wav +' |v|'+chVA.vol+ ' |lp|'+chVA.lp );
-                
+
                 triggerSample( chVA ); //
             }
 
@@ -324,50 +312,54 @@ function doHits(){
  */
 function triggerSample(chVA)
 {
-    
+
             var sample = sounds[chVA.wav-1];
             //console.log(sample);
             //console.log(chVA);
-    
+
             var vol = Math.round( (chVA.vol/100) * 100) / 100;
-    
+
             console.log(vol);
-    
+
             var sampler = __().sampler({
                 id: 's'+chVA.id,
-		        path: sounds_root+sample,
-		        loop: false
-		    });
-    
-    sampler.stop();
-            
-    
+                path: sounds_root+sample,
+                loop: false
+            });
+
+            __('sampler').stop();
+
+
             // highpass
             if( chVA.hp > 0 ){
                 console.log('hp');
-                sampler.highpass({ frequency:chVA.hp*10 })                
+                sampler.highpass({ frequency:chVA.hp*10 })
             }
-        
-    
+
+
             // lowpass
             if( chVA.lp > 0 ){
                 console.log('lp');
-                sampler.lowpass({ frequency:chVA.lp })                
+                sampler.lowpass({ frequency:chVA.lp })
             }
-    
+
                 // OD
             if( chVA.od > 0 ){
                 console.log('od');
-                sampler.overdrive({ frequency:chVA.od })                
+                sampler.overdrive({ frequency:chVA.od })
             }
-        
+
                 // DLY
             if( chVA.dly > 0 ){
                 console.log('dly');
-                sampler.delay( );               
+                sampler.delay( );
             }
-    
+
             sampler.dac().play();
+
+            __("dac").remove(500);
+
+
 }
 
 
@@ -410,11 +402,11 @@ function trStop()
 
 function trButtons()
 {
-    
 
 
- 
-    
+
+
+
     $(document).on('click', '.transport button.play', function(){
         if( $(this).hasClass('active') ){
             trStop();
@@ -531,3 +523,24 @@ function draggable(target){
     target.draggable({ axis: "x", grid: [ grid, grid ] });
 }
 
+
+
+
+
+Array.prototype.rotate = (function() {
+    // save references to array functions to make lookup faster
+    var push = Array.prototype.push,
+        splice = Array.prototype.splice;
+
+    return function(count) {
+        var len = this.length >>> 0, // convert to uint
+            count = count >> 0; // convert to int
+
+        // convert count to value in range [0, len)
+        count = ((count % len) + len) % len;
+
+        // use splice.call() instead of this.splice() to make function generic
+        push.apply(this, splice.call(this, 0, count));
+        return this;
+    };
+})();

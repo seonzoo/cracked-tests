@@ -27,7 +27,28 @@ button{
         }
 }
 
+nav{
 
+    margin: 25px;
+    ul{
+        li{
+            width:20%;
+            padding: 5px;
+            a{
+            display: inline-block;
+            text-decoration: none;
+            width:100%;
+            padding: 5px;
+            border-radius: 5px;
+            background: #FFF;
+            color: #000;
+            }
+
+        }
+
+    }
+
+}
 
 
 #msg{
@@ -125,12 +146,24 @@ input{
         border-right: 4px solid #D8D8D8;
         &.active{
             border-right: 25px solid #FFF;
+            .sel {
+                background: #900;
+                color:#FFF;
+            }
         }
 
         .num{
             display: inline-block;
             width:32px;
             border-right: 4px solid #EEE;
+        }
+
+        .sel{
+            float: right;
+            cursor: pointer;
+            padding-right: 5px;
+                background: #FFF;
+                color:#000;
         }
 
     }
@@ -156,10 +189,10 @@ input{
  *
  */
 .ch-strip{
-    
+
     .slider.vol{left:0;}
 
-    
+
     position: relative;
     margin: 25px 0 25px 25px;
     float: left;
@@ -214,13 +247,13 @@ input{
             bottom:20px;
         }
     }
-    
 
-    
+
+
     .btn-row{
         position: absolute;
         top:50px;
-        
+
         label{
             float: left;
             width:20px;
@@ -231,7 +264,7 @@ input{
             margin: 0;
         }
     }
-    
+
     #dnup{
         right:0;
     }
