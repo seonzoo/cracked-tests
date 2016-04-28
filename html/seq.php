@@ -9,7 +9,7 @@
     <!--  Transport -->
     <div id='transport' class="row transport">
         <button type="button" class="play">play</button>
-        <button type="button" class="addpad">pad</button>
+        <button type="button" class="addRow">+ch</button>
         <input type="text" value="" class="bpm" size="4">
     </div>
 
@@ -24,13 +24,36 @@
 
     </div>
 
-    <div class="ch-strip">
+    <div class="ch-strip" data-channel="0">
 
-        <div class="vol"></div>
-        <div class="vol-num">1</div>
+        <div class="current">00</div>
+
+        <div class="wav-sound"><select class="option-wav"></select></div>
+
+
+        <div class="slider vol">
+            <div class="ctrl"></div>
+            <div class="num">0</div>
+            <div class="label">Vol</div>
+        </div>
+
+
+        <div class="slider lp">
+            <div class="ctrl"></div>
+            <div class="num">0</div>
+            <div class="label">LP</div>
+        </div>
+
+        <div class="btn-row">
+           <input type="checkbox" class="bool" id="check-od"><label for="check-od">OD</label>
+        </div>
+
+
 
 
     </div>
+
+
 
 
 

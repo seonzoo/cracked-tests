@@ -4,53 +4,124 @@ $(document).ready(function($){
 
     trButtons();
 
-    stripVol();
+    chControl();
+
+    getSounds();
 
 });
 
-var sounds_root = 'http://audio.los.pw/sounds/'
-var sounds = [];
-var stopped = true;
-var bpm = 60;
-
-var grid = 16;
-
-var steps = 32;
-
+var sounds_root = 'http://audio.los.pw/sounds/';
+//var alphabet    = ("abcdefghijklmnopqrstuvwxyz").split("");
+var sounds      = [];
+var stopped     = true;
+var bpm         = 60;
+var grid        = 16;
+var steps       = 32;
 
 
+
+function getSounds()
+{
+
+    $.ajax({
+      type: 'POST',
+      url: 'sounds/',
+      data: {  },
+      dataType: 'json',
+      success: function(jsonData) {
+        sounds = jsonData;
+        makeDropdown(jsonData);
+      },
+      error: function() {
+        alert('Error loading Sounds');
+      }
+    });
+
+}
+
+
+function makeDropdown( data )
+{
+
+    var select = $('.option-wav');
+    var output = '<option value="">SELECT</option>';
+
+    $.each( data, function(k,v){
+
+        if(String(k).length <2){var num = '0'+(k+1);}else{var num = k+1;}
+
+        v = v.split('/');
+        t = v[1].split('-');
+        output += '<option value="'+v[0]+'/'+v[1]+'">'+num+') '+t[1]+'</option>';
+    });
+
+    $(output).appendTo( select );
+
+    select.change(function(){
+       var idx = $('option:selected', this).index();
+       $( ".channels .ch.active .wav-num").text( idx );
+    });
+
+    //$( '.option-wav').selectmenu();
+
+}
 
 
 function msg(msg){
-
     $('#msg').text(msg);
 }
 
 
-function stripVol(){
+function chControl(){
 
-    $( ".ch-strip .vol" ).slider({
+    chSelect();
+
+
+    $( ".ch-strip .bool" ).button();
+
+
+    /* Vol */
+    $( ".ch-strip .vol .ctrl" ).slider({
       orientation: "vertical",
       range: "min",
       min: 0,
       max: 100,
       value: 60,
       slide: function( event, ui ) {
-        $( ".ch-strip .vol-num" ).text( ui.value );
+        $( ".channels .ch.active .vol-num").text( ui.value );
+        $( ".ch-strip .vol .num" ).text( ui.value );
       }
     });
-    $( ".ch-strip .vol-num" ).text( $( ".ch-strip .vol" ).slider( "value" ) );
+    //$( ".ch-strip .vol-num" ).text( $( ".ch-strip .vol" ).slider( "value" ) );
+
+
+    /* LP */
+    $( ".ch-strip .lp .ctrl" ).slider({
+      orientation: "vertical",
+      range: "min",
+      min: 0,
+      max: 100,
+      value: 60,
+      slide: function( event, ui ) {
+        $( ".channels .ch.active .lp-num").text( ui.value );
+        $( ".ch-strip .lp .num" ).text( ui.value );
+      }
+    });
+    //$( ".ch-strip .vol-num" ).text( $( ".ch-strip .vol" ).slider( "value" ) );
+
+
+
 
 }
 
 
-function addpad(){
-    
+function addRow(){
+
     var idx = $('.timeline .ch-steps').length+1;
 
     if(idx>grid){ msg('max channels'); return;}
 
-    var row = $('<ul/>').addClass('ch-steps').data('channel', idx );
+    var row = $('<ul/>').addClass('ch-steps').data('channel', idx ).attr('id', 'steps'+idx );;
 
 
     for( i =0; i<steps; i++){
@@ -66,13 +137,15 @@ function addpad(){
 
 }
 
+
+
 function selectable(row){
-    
+
     $('li', row).click(function(){
         if( $(this).hasClass('active') ){
-            $(this).removeClass('active')    
+            $(this).removeClass('active')
         } else {
-            $(this).addClass('active') 
+            $(this).addClass('active')
         }
     });
 
@@ -81,10 +154,54 @@ function selectable(row){
 
 function addChannel(idx){
 
-    var div = $('<div/>').addClass('ch').data('channel', idx );
-    div.appendTo('.channels');
+    var div = $('<div/>').addClass('ch').data('channel', idx ).attr('id', 'ch'+idx );
+    $('<div class="num wav-num">0</div>').appendTo(div); // wav #
+    $('<div class="num vol-num">0</div>').appendTo(div); // volume #
+    $('<div class="num lp-num">0</div>').appendTo(div);  // lp #
+
+    div.appendTo('.channels').trigger('click');
 
 }
+
+function chSelect(){
+
+    $(document).on('click', '.channels .ch', function(){
+        var ch = $(this).data('channel');
+
+        $('.ch-strip').data('channel', ch);
+        $('.ch-strip .current').text(ch);
+
+        $('.channels .ch').removeClass('active');
+        $(this).addClass('active');
+
+        // get all num values
+        var chVal = getChValues(ch);
+
+        // set all num values
+        $('.ch-strip .slider.vol .ctrl').slider('value', chVal.vol);
+        $('.ch-strip .slider.lp  .ctrl').slider('value', chVal.lp);
+        $('.option-wav option:eq('+chVal.wav+')').prop('selected', true);
+        //console.log( $('.option-wav option:eq('+wav+')') );
+    });
+
+}
+
+
+function getChValues( ch ){
+
+        var thisCH = $('#ch'+ch);
+
+        // get all num values
+        var vals = {
+            'vol' : parseInt( $('.vol-num', thisCH).text() ),
+            'lp'  : parseInt( $('.lp-num',  thisCH).text() ),
+            'wav' : parseInt( $('.wav-num', thisCH).text() )
+        };
+
+    return vals;
+}
+
+
 
 function doHits(){
 
@@ -95,7 +212,8 @@ function doHits(){
             var hit = $('.pad', this).eq(headX).hasClass('active');
 
             if(hit){
-                msg( 'Hit CH(' + ch + ') @' + (headX+1) );
+                var chVal = getChValues(ch);
+                msg( 'Hit CH(' + ch + ') @' + (headX+1) + ' |wav|'+chVal.wav +' |v|'+chVal.vol+ ' |lp|'+chVal.lp );
             }
 
     });
@@ -157,7 +275,7 @@ function trButtons()
             bpm = parseInt($(this).val());
     });
 
-    $(document).on('click', '.transport .addpad', function(){
-            addpad();
+    $(document).on('click', '.transport .addRow', function(){
+            addRow();
     });
 }

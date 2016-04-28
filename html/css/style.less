@@ -106,7 +106,7 @@ input{
       background: #FFF;
       width:14px;
       height: 14px;
-        border: 1px solid #FFF;
+        border: 1px solid #EEE;
     }
 }
 
@@ -114,14 +114,24 @@ input{
 .channels{
     margin: 25px 0;
     float: left;
-    width:256px;
+    width:260px;
     height: 256px;
     background: #FFF;
 
     .ch{
-        width:256px;
+        width:260px;
         height: 15px;
         border-bottom: 1px dotted #C0C0C0;
+        border-right: 4px solid #D8D8D8;
+        &.active{
+            border-right: 4px solid #900;
+        }
+
+        .num{
+            display: inline-block;
+            width:32px;
+            border-right: 4px solid #EEE;
+        }
 
     }
 
@@ -151,6 +161,66 @@ input{
     height: 256px;
     background: #FFF;
 
+    .current{
+      position: absolute;
+        left:0;
+        top:0;
+        height:32px;
+        width:32px;
+    }
+
+    .wav-sound{
+        height: 32px;
+        position: absolute;
+        left:32px;
+        top:0;
+    }
+
+
+    .slider{
+        position: absolute;
+        height: 164px;
+        width:24px;
+        bottom:0;
+
+        .ctrl{
+            height: 100px;
+            position: absolute;
+            bottom:50px;
+            left:4px;
+        }
+
+        .label, .num{
+            text-align: center;
+            width:24px;
+            height: 20px;
+            position: absolute;
+            bottom:0;
+            left:0;
+            background: #EEE;
+        }
+
+        .num{
+            bottom:20px;
+        }
+    }
+
+    .slider.vol{
+        left:0;
+    }
+
+    .slider.lp{
+        left:24px;
+    }
+
+
+/*
+    .vol{
+        position: absolute;
+        right:16px;
+        top:40px;
+        height: 200px;
+    }
     .vol-num{
         position: absolute;
         right:12px;
@@ -160,14 +230,21 @@ input{
         background: #FFF;
         text-align: center;
     }
-
-    .vol{
+    .lp{
         position: absolute;
-        right:16px;
+        right:46px;
         top:40px;
         height: 200px;
     }
-
+    .lp-num{
+        position: absolute;
+        right:42px;
+        top:0px;
+        height: 24px;
+        width:24px;
+        background: #FFF;
+        text-align: center;
+    }*/
 }
 
 
