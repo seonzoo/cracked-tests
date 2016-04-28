@@ -221,8 +221,9 @@ function buildFx(){
  */
 function seqControl(){
 
-    var seq = $('<div/>').attr('id', 'seq');
-    for(i=1;1<9;i++){
+    var seq = $('<div/>').attr('id', 'seq').addClass('btn-row');
+    for(i=1;i<9;i++){
+        //console.log(i);
         $('<input type="radio" id="radio'+i+'" name="radio"><label for="radio'+i+'">'+i+'</label>').appendTo(seq);
     }
     $( seq ).buttonset().appendTo('.ch-ctrl');
