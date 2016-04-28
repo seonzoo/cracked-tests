@@ -124,7 +124,7 @@ input{
         border-bottom: 1px dotted #C0C0C0;
         border-right: 4px solid #D8D8D8;
         &.active{
-            border-right: 4px solid #900;
+            border-right: 25px solid #FFF;
         }
 
         .num{
@@ -152,8 +152,14 @@ input{
 
 }
 
-
+/** !HERE
+ *
+ */
 .ch-strip{
+    
+    .slider.vol{left:0;}
+
+    
     position: relative;
     margin: 25px 0 25px 25px;
     float: left;
@@ -162,11 +168,13 @@ input{
     background: #FFF;
 
     .current{
-      position: absolute;
+        position: absolute;
         left:0;
         top:0;
         height:32px;
         width:32px;
+        font-size: 24px;
+        padding: 0 2px;
     }
 
     .wav-sound{
@@ -182,6 +190,7 @@ input{
         height: 164px;
         width:24px;
         bottom:0;
+        border-right: 1px solid #FFF;
 
         .ctrl{
             height: 100px;
@@ -198,19 +207,33 @@ input{
             bottom:0;
             left:0;
             background: #EEE;
+            border-right: 1px solid #FFF;
         }
 
         .num{
             bottom:20px;
         }
     }
+    
 
-    .slider.vol{
-        left:0;
+    
+    .btn-row{
+        position: absolute;
+        top:50px;
+        
+        label{
+            float: left;
+            width:20px;
+            height: 12px;
+            font-size: 12px;
+            padding: 6px 0;
+            span{padding: 0;}
+            margin: 0;
+        }
     }
-
-    .slider.lp{
-        left:24px;
+    
+    #dnup{
+        right:0;
     }
 
 

@@ -194,7 +194,7 @@ function playSeq( channel )
 		
 		var active = $(target).hasClass('active');
 		if(active){
-		 triggerSample(sound_select, channel);
+		 triggerSample(sound_select, channel); 
 		}
 		
 		if(loop == true && stopped == false){ playSeq(channel); }
