@@ -325,8 +325,9 @@ function triggerSample(chVA)
             //console.log(chVA);
 
             var vol = Math.round( (chVA.vol/100) * 100) / 100;
+            //var vol = -Math.round(  100 - chVA.vol);
 
-            console.log(vol);
+            //console.log(vol);
 
             var sampler = __().sampler({
                 id: 's'+chVA.id,
@@ -334,7 +335,7 @@ function triggerSample(chVA)
                 loop: false
             });
 
-            __('sampler').stop();
+            //__('sampler').stop();
 
 
             // highpass
@@ -362,9 +363,9 @@ function triggerSample(chVA)
                 sampler.delay( );
             }
 
-            sampler.dac().play();
+            sampler.gain(vol).dac().play();
 
-            __("dac").remove(500);
+            //__("dac").remove(500);
 
 
 }
