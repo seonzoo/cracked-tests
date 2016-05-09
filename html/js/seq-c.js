@@ -306,7 +306,7 @@ function doHits(){
                 var chVA = getChValues(chID);
                 msg( 'Hit CH(' + chID + ') @' + (headX+1) + ' |wav|'+chVA.wav +' |v|'+chVA.vol+ ' |lp|'+chVA.lp );
 
-                triggerSample( chVA ); //
+                //triggerSample( chVA ); //
             }
 
     });
@@ -327,16 +327,17 @@ function triggerSample(chVA)
             var vol = Math.round( (chVA.vol/100) * 100) / 100;
             //var vol = -Math.round(  100 - chVA.vol);
 
-            //console.log(vol);
+            //console.log(chVA);
 
-            var sampler = __().sampler({
-                id: 's'+chVA.id,
+            var sampler = __().buffer({
+                id: 'ch'+chVA.id,
                 path: sounds_root+sample,
                 loop: false
-            });
+            }).gain(vol);
 
             //__('sampler').stop();
-
+    
+    
 
             // highpass
             if( chVA.hp > 0 ){
@@ -357,22 +358,32 @@ function triggerSample(chVA)
                 sampler.overdrive({ frequency:chVA.od })
             }
 
-      // RV
+                // DLY
+    
             if( chVA.rv > 0 ){
                 var ms = (chVA.rv/(bpm/60))/100;
                 console.log( ms);
-
+                
                 sampler.reverb({reverse:false,decay:0.5,seconds:ms});
                 //sampler.delay({damping:.9,cutoff:0,feedback:0,delay:0.2});
             }
 
-            sampler.gain(vol).dac().play();
+            sampler.dac().play();
 
             //__("dac").remove(500);
 
-
 }
 
+
+
+
+/**
+ *  SEQUENCER
+ */
+function triggerSeqs()
+{
+
+}
 
 
 
@@ -386,10 +397,10 @@ function trPlay()
         var fn = function(){
 
             var ms = 100/(bpm/60);
-
             $('.timeline .playhead').css({'left': (i*grid)+'px'});
 
-             doHits();
+            if(0==i){ triggerSeqs(); }
+            //doHits();
 
             if(stopped == false){
                 if( ++i < 32){
@@ -413,10 +424,6 @@ function trStop()
 
 function trButtons()
 {
-
-
-
-
 
     $(document).on('click', '.transport button.play', function(){
         if( $(this).hasClass('active') ){

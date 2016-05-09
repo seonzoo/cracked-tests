@@ -236,6 +236,19 @@ function seqControl(){
 
 }
 
+//define a plugin called sam
+cracked.sam = function(params) {
+    
+    var testwav = '11575__dwsd__dwsd-deep-house-drum-kits/183096__dwsd__bd-dust808.wav';
+    
+    __().begin("sam",params).buffer({
+                //id: 'sam'+params.id,
+                path: sounds_root+testwav,
+                loop: false
+            }).end("sam");
+    //return cracked so we can chain methods
+    return cracked;
+}
 
 /**
  *  ADDCH
@@ -254,6 +267,8 @@ function addChannel(idx){
 
     // triggers chSelect()
     div.appendTo('.channels').trigger('click');
+    
+    __().sam({id:"sam"+idx});
 
 }
 
@@ -323,20 +338,21 @@ function triggerSample(chVA)
             var sample = sounds[chVA.wav-1];
             //console.log(sample);
             //console.log(chVA);
-
+ 
             var vol = Math.round( (chVA.vol/100) * 100) / 100;
             //var vol = -Math.round(  100 - chVA.vol);
 
-            //console.log(vol);
+            console.log( __('#sam'+chVA.id) );
 
-            var sampler = __().sampler({
-                id: 's'+chVA.id,
+            var sampler = __('#sam'+chVA.id);
+            
+            /*__().buffer({
+                id: 'ch'+chVA.id,
                 path: sounds_root+sample,
                 loop: false
-            });
+            }).gain(vol);*/
 
-            //__('sampler').stop();
-
+            sampler.gain(vol).stop();
 
             // highpass
             if( chVA.hp > 0 ){
@@ -357,19 +373,19 @@ function triggerSample(chVA)
                 sampler.overdrive({ frequency:chVA.od })
             }
 
-      // RV
+                // DLY
+    
             if( chVA.rv > 0 ){
                 var ms = (chVA.rv/(bpm/60))/100;
                 console.log( ms);
-
+                
                 sampler.reverb({reverse:false,decay:0.5,seconds:ms});
                 //sampler.delay({damping:.9,cutoff:0,feedback:0,delay:0.2});
             }
 
-            sampler.gain(vol).dac().play();
+            sampler.dac().play();
 
             //__("dac").remove(500);
-
 
 }
 

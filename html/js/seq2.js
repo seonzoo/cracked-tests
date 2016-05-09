@@ -19,7 +19,7 @@ var stopped     = true;
 var bpm         = 60;
 var grid        = 16;
 var steps       = 32;
-var fx = 'lp,hp,od,rv'.split(',');
+var fx = 'lp,hp,od'.split(',');
 
 
 
@@ -325,9 +325,8 @@ function triggerSample(chVA)
             //console.log(chVA);
 
             var vol = Math.round( (chVA.vol/100) * 100) / 100;
-            //var vol = -Math.round(  100 - chVA.vol);
 
-            //console.log(vol);
+            console.log(vol);
 
             var sampler = __().sampler({
                 id: 's'+chVA.id,
@@ -335,7 +334,7 @@ function triggerSample(chVA)
                 loop: false
             });
 
-            //__('sampler').stop();
+            __('sampler').stop();
 
 
             // highpass
@@ -357,18 +356,15 @@ function triggerSample(chVA)
                 sampler.overdrive({ frequency:chVA.od })
             }
 
-      // RV
-            if( chVA.rv > 0 ){
-                var ms = (chVA.rv/(bpm/60))/100;
-                console.log( ms);
-
-                sampler.reverb({reverse:false,decay:0.5,seconds:ms});
-                //sampler.delay({damping:.9,cutoff:0,feedback:0,delay:0.2});
+                // DLY
+            if( chVA.dly > 0 ){
+                console.log('dly');
+                sampler.delay( );
             }
 
-            sampler.gain(vol).dac().play();
+            sampler.dac().play();
 
-            //__("dac").remove(500);
+            __("dac").remove(500);
 
 
 }
